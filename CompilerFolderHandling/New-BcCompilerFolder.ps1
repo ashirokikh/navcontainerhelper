@@ -230,6 +230,15 @@ try {
                 # Set execute permissions on altool
                 Write-Host "Setting execute permissions on altool"
                 & /usr/bin/env sudo pwsh -command "& chmod +x $alToolExePath"
+            } else {
+                if (Test-Path $alToolExePath) {
+                    # Set execute permissions on altool
+                    Write-Host "Setting execute permissions on altool"
+                    & chmod +x $alToolExePath
+                }
+                # Set execute permissions on alc
+                Write-Host "Setting execute permissions on alc"
+                & chmod +x $alcExePath
             }
         } else {
             # Patch alc.runtimeconfig.json for use with Linux or macOS
@@ -255,44 +264,6 @@ try {
             }
         }       
     }
-
-    # if ($isLinux) {
-    #     $alToolExePath = Join-Path $containerCompilerPath 'extension/bin/linux/altool'
-    #     if (Test-Path $alToolExePath) {
-    #         # Set execute permissions on altool
-    #         Write-Host "Setting execute permissions on altool"
-    #         & /usr/bin/env sudo pwsh -command "& chmod +x $alToolExePath"
-    #     }
-    #     $alcExePath = Join-Path $containerCompilerPath 'extension/bin/linux/alc'
-    #     if (Test-Path $alcExePath) {
-    #         # Set execute permissions on alc
-    #         Write-Host "Setting execute permissions on alc"
-    #         & /usr/bin/env sudo pwsh -command "& chmod +x $alcExePath"
-    #     }
-    #     else {
-    #         # Patch alc.runtimeconfig.json for use with Linux
-    #         Write-Host "Patching alc.runtimeconfig.json for use with Linux"
-    #         $alcConfigPath = Join-Path $containerCompilerPath 'extension/bin/win32/alc.runtimeconfig.json'
-    #         if (Test-Path $alcConfigPath) {
-    #             $oldAlcConfig = Get-Content -Path $alcConfigPath -Encoding UTF8 | ConvertFrom-Json
-    #             if ($oldAlcConfig.runtimeOptions.PSObject.Properties.Name -eq 'includedFrameworks') {
-    #                 $newAlcConfig = @{
-    #                     "runtimeOptions" = @{
-    #                         "tfm" = "net6.0"
-    #                         "framework" = @{
-    #                             "name" = "Microsoft.NETCore.App"
-    #                             "version" = $oldAlcConfig.runtimeOptions.includedFrameworks[0].version
-    #                         }
-    #                         "configProperties" = @{
-    #                             "System.Reflection.Metadata.MetadataUpdater.IsSupported" = $false
-    #                         }
-    #                     }
-    #                 }
-    #                 $newAlcConfig | ConvertTo-Json | Set-Content -Path $alcConfigPath -Encoding utf8NoBOM
-    #             }
-    #         }
-    #     }
-    # }
     $compilerFolder
 }
 catch {
