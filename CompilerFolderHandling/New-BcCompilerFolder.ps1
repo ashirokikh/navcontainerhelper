@@ -216,7 +216,10 @@ try {
     }
 
     if ($isLinux -or $isMacOS) {
-        $compilerPlatform = $IsLinux ? 'linux' : 'darwin'
+        $compilerPlatform = 'linux'
+        if ($isMacOS) {
+            $compilerPlatform = 'darwin'
+        }
         $alcExePath = Join-Path $containerCompilerPath "extension/bin/$($compilerPlatform)/alc"
         $alToolExePath = Join-Path $containerCompilerPath "extension/bin/$($compilerPlatform)/altool"
 
