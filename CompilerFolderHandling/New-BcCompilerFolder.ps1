@@ -216,28 +216,25 @@ try {
     }
 
     if ($isLinux -or $isMacOS) {
-        $compilerPlatform = ($IsLinux) ? 'linux' : 'darwin'
+        $compilerPlatform = $IsLinux ? 'linux' : 'darwin'
         $alcExePath = Join-Path $containerCompilerPath "extension/bin/$($compilerPlatform)/alc"
         $alToolExePath = Join-Path $containerCompilerPath "extension/bin/$($compilerPlatform)/altool"
 
         if (Test-Path $alcExePath) {
-            if ($isLinux) {
-                if (Test-Path $alToolExePath) {
-                    # Set execute permissions on altool
-                    Write-Host "Setting execute permissions on altool"
-                    & /usr/bin/env sudo pwsh -command "& chmod +x $alToolExePath"
-                }
+            if (Test-Path $alToolExePath) {
                 # Set execute permissions on altool
                 Write-Host "Setting execute permissions on altool"
-                & /usr/bin/env sudo pwsh -command "& chmod +x $alToolExePath"
-            } else {
-                if (Test-Path $alToolExePath) {
-                    # Set execute permissions on altool
-                    Write-Host "Setting execute permissions on altool"
+                if ($isLinux) {
+                    & /usr/bin/env sudo pwsh -command "& chmod +x $alToolExePath"
+                } else {
                     & chmod +x $alToolExePath
                 }
-                # Set execute permissions on alc
-                Write-Host "Setting execute permissions on alc"
+            }
+            # Set execute permissions on alc
+            Write-Host "Setting execute permissions on alc"
+            if ($isLinux) {
+                & /usr/bin/env sudo pwsh -command "& chmod +x $alcExePath"
+            } else {
                 & chmod +x $alcExePath
             }
         } else {
